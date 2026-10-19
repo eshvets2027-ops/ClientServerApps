@@ -1,0 +1,11 @@
+using EventHub.Api.Middleware;
+using EventHub.Application.Services;
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = context => context.ProblemDetails.Type = null);
+builder.Services.AddSingleton<EventService>();
+var app = builder.Build();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseStatusCodePages();
+app.MapControllers();
+app.Run();
